@@ -1,13 +1,16 @@
 use serde::Deserialize;
 
-use crate::amount::Amount;
+use crate::{
+    amount::Amount,
+    bank::{AccountID, TransactionID},
+};
 
 /// A basic Transaction containing a type, client id, transaction number, and amount.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Transaction {
     r#type: Kind,
-    client: u16,
-    tx: u32,
+    client: AccountID,
+    tx: TransactionID,
     amount: Option<Amount>,
 }
 

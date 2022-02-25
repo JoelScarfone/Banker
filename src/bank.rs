@@ -6,15 +6,18 @@ use crate::{
     transaction::{Kind, Transaction},
 };
 
+pub type AccountID = u16;
+pub type TransactionID = u32;
+
 pub struct Bank {
     // Current state of all accounts
-    accounts: HashMap<u16, Account>,
+    accounts: HashMap<AccountID, Account>,
 
     // History of all transactions which are `Kind::Deposit` which might be eventually disputed.
-    transactions: HashMap<u32, Transaction>,
+    transactions: HashMap<TransactionID, Transaction>,
 
     // Current ongoing disputes.
-    disputes: HashMap<u32, Transaction>,
+    disputes: HashMap<TransactionID, Transaction>,
 }
 
 impl Bank {

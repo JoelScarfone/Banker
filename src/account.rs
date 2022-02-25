@@ -1,5 +1,7 @@
 use crate::amount::Amount;
 
+/// A basic Bank account. A single `Account` will store the amount available, held, and if the
+/// account is locked or not.
 #[derive(Debug)]
 pub struct Account {
     available: Amount,

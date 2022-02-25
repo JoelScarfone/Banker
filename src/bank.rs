@@ -9,6 +9,10 @@ use crate::{
 pub type AccountID = u16;
 pub type TransactionID = u32;
 
+/// A basic bank. Will store all accounts in memory, transactions of certain types that might be
+/// needed in the future, and any ongoing disputes that might need to be resolved. All logic for
+/// how the bank operates is applied at this level, the underlying account has no knowledge of how
+/// transactions get processed.
 pub struct Bank {
     // Current state of all accounts
     accounts: HashMap<AccountID, Account>,

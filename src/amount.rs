@@ -5,6 +5,11 @@ use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 /// A decimal value intended to be precise up to four decimal places. The underlying storage of
 /// this floating point number is a u64, meaning the maximum value of a bank account would be
 /// 1844674407370955.1615 (represented as 2 ^ 64).
+///
+/// This type currently supports basic add and subtraction, and will need an extension on it's api
+/// if we want to handle overflows in the future. We can also change the underlying storage to
+/// allocate more bits for larger account maximums or to handle negative values if we want to allow
+/// accounts to be negative.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct Amount(u64);
 
@@ -93,7 +98,6 @@ mod tests {
     fn deserialize() {
         let data = "1234.5678";
 
-        // Parse the string of data into serde_json::Value.
         let amount: Amount = serde_json::from_str(data).unwrap();
         assert_eq!(amount.0, 12345678)
     }

@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     account::Account,
+    amount::Amount,
     transaction::{Kind, Transaction},
 };
 
@@ -26,13 +27,13 @@ impl Bank {
     }
 
     // Public exposure. Ensure to report valid floating point values.
-    pub fn accounts_iter(&self) -> impl Iterator<Item = (u16, f64, f64, f64, bool)> + '_ {
+    pub fn accounts_iter(&self) -> impl Iterator<Item = (u16, Amount, Amount, Amount, bool)> + '_ {
         self.accounts.iter().map(|(id, account)| {
             (
                 *id,
-                account.available() as f64 / 10000.0,
-                account.held() as f64 / 10000.0,
-                account.total() as f64 / 10000.0,
+                account.available(),
+                account.held(),
+                account.total(),
                 account.is_locked(),
             )
         })
@@ -117,16 +118,16 @@ mod tests {
     #[test]
     fn iterator() {
         let mut account = Account::new();
-        account.credit(10000);
+        account.credit(10000.into());
 
         let mut dispute_account = Account::new();
-        dispute_account.credit(10000);
-        dispute_account.try_dispute(5000).unwrap();
+        dispute_account.credit(10000.into());
+        dispute_account.try_dispute(5000.into()).unwrap();
 
         let mut frozen_account = Account::new();
-        frozen_account.credit(10000);
-        frozen_account.try_dispute(5000).unwrap();
-        frozen_account.try_chargeback(5000).unwrap();
+        frozen_account.credit(10000.into());
+        frozen_account.try_dispute(5000.into()).unwrap();
+        frozen_account.try_chargeback(5000.into()).unwrap();
 
         let mut accounts = HashMap::new();
         accounts.insert(1, account);
@@ -139,15 +140,15 @@ mod tests {
             disputes: HashMap::new(),
         };
 
-        let mut accounts: Vec<(u16, f64, f64, f64, bool)> = bank.accounts_iter().collect();
+        let mut accounts: Vec<(u16, Amount, Amount, Amount, bool)> = bank.accounts_iter().collect();
         accounts.sort_by(|x, y| x.0.cmp(&y.0));
 
         assert_eq!(
             accounts,
             vec![
-                (1, 1.0, 0.0, 1.0, false),
-                (2, 0.5, 0.5, 1.0, false),
-                (3, 0.5, 0.0, 0.5, true),
+                (1, 1.0.into(), 0.0.into(), 1.0.into(), false),
+                (2, 0.5.into(), 0.5.into(), 1.0.into(), false),
+                (3, 0.5.into(), 0.0.into(), 0.5.into(), true),
             ]
         )
     }

@@ -1,4 +1,5 @@
 mod account;
+mod amount;
 mod bank;
 mod cli;
 mod error;

@@ -1,5 +1,6 @@
 use std::{error::Error as StdError, fmt};
 
+/// An error type to wrap all errors that force us to terminate execution.
 #[derive(Debug)]
 pub struct Error {
     reason: String,
